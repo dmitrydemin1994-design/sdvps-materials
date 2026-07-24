@@ -10,10 +10,14 @@ pipeline {
         stage('Check Environment') {
             steps {
                 echo '=== 1. Проверка окружения ==='
-                sh 'export PATH=$PATH:/usr/local/go/bin'
-                sh 'which go; go version'
-                sh 'which java; java -version'
-                sh 'docker --version'
+                sh '''
+                    export PATH=$PATH:/usr/local/go/bin
+                    which go
+                    go version
+                    which java
+                    java -version
+                    docker --version
+                '''
             }
         }
 
