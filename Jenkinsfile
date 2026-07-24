@@ -39,11 +39,11 @@ pipeline {
         stage('Build Go binary') {
             steps {
                 sh '''
+                    export PATH=$PATH:/usr/local/go/bin
                     export GOPATH=/tmp/go
                     mkdir -p $GOPATH
                     cd $WORKSPACE
-                    # Команда взята из стадии builder твоего Dockerfile
-                    CGO_ENABLED=0 GOOS=linux go build -a -installsuffix nocgo -o myapp .
+                    CGO_ENABLED=0 GOOS=linux ${GO_CMD} build -a -installsuffix nocgo -o myapp .
                 '''
             }
         }
@@ -59,6 +59,7 @@ pipeline {
                     passwordVariable: 'NEXUS_PASS'
                 )]) {
                     sh '''
+                        export PATH=$PATH:/usr/local/go/bin
                         curl -u "${NEXUS_USER}:${NEXUS_PASS}" \
                              -T myapp \
                              "${NEXUS_URL}myapp"
