@@ -36,7 +36,6 @@ pipeline {
                 echo "=== 4. Сборка Docker-образа: ${IMAGE_TAG} ==="
                 sh "docker build -t ${IMAGE_TAG} ."
                 }
-            }
         }
     }
 
