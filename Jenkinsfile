@@ -4,6 +4,7 @@ pipeline {
     environment {
         // Переменная для тега образа — чтобы не дублировать в нескольких местах
         IMAGE_TAG = "my-go-app:build-${BUILD_NUMBER}"
+        GO_CMD = "/usr/local/go/bin/go"
     }
 
     stages {
