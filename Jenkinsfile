@@ -32,7 +32,7 @@ pipeline {
         stage('Run Go Tests') {
             steps {
                 echo '=== 3. Тест ==='
-                sh 'go test -v'
+                sh '${GO_CMD} test -v'
             }
         }
 
