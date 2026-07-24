@@ -36,7 +36,6 @@ pipeline {
             }
         }
 
-        stages {
         stage('Build Go binary') {
             steps {
                 sh '''
@@ -48,7 +47,7 @@ pipeline {
                 '''
             }
         }
-        
+
         stage('Upload to Nexus') {
             environment {
                 NEXUS_URL = 'http://192.168.0.229:8081/repository/go-binaries/'
