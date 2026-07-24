@@ -36,12 +36,38 @@ pipeline {
             }
         }
 
-        stage('Build Docker Image') {
+        stages {
+        stage('Build Go binary') {
             steps {
-                echo "=== 4. Сборка Docker-образа: ${IMAGE_TAG} ==="
-                sh "docker build -t ${IMAGE_TAG} ."
-                }
+                sh '''
+                    export GOPATH=/tmp/go
+                    mkdir -p $GOPATH
+                    cd $WORKSPACE
+                    # Команда взята из стадии builder твоего Dockerfile
+                    CGO_ENABLED=0 GOOS=linux go build -a -installsuffix nocgo -o myapp .
+                '''
+            }
         }
+        
+        stage('Upload to Nexus') {
+            environment {
+                NEXUS_URL = 'http://192.168.0.229:8081/repository/go-binaries/'
+            }
+            steps {
+                withCredentials([usernamePassword(
+                    credentialsId: 'nexus-creds',
+                    usernameVariable: 'NEXUS_USER',
+                    passwordVariable: 'NEXUS_PASS'
+                )]) {
+                    sh '''
+                        curl -u "${NEXUS_USER}:${NEXUS_PASS}" \
+                             -T myapp \
+                             "${NEXUS_URL}myapp"
+                    '''
+                }
+            }
+        }
+
     }
 
     post {
